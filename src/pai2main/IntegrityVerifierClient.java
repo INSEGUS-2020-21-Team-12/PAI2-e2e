@@ -15,26 +15,31 @@ public class IntegrityVerifierClient {
 	public IntegrityVerifierClient() {
 		try {
 			SocketFactory socketFactory = (SocketFactory) SocketFactory.getDefault();
-			Socket socket = (Socket) socketFactory.createSocket("localhost", 7070);
+			Socket socket = (Socket) socketFactory.createSocket("localhost", 3343);
+			
 			// Crea un PrintWriter para enviar mensaje/MAC al servidor
 			PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			String userName = JOptionPane.showInputDialog(null, "Introduzca su mensaje:");
 
 			// TODO: Recoger input del usuario y MAC de la transaccion
-			String mensaje = null, macdelMensaje = null;
+			String mensaje = userName, macdelMensaje = null;
+			
 			// Envío del mensaje al servidor
 			output.println(mensaje);
 			// Habría que calcular el correspondiente MAC con la clave compartida por
 			// servidor/cliente
-			output.println(macdelMensaje);
+			//output.println(macdelMensaje);
 			// Importante para que el mensaje se envíe
 			output.flush();
+			
 			// Crea un objeto BufferedReader para leer la respuesta del servidor
 			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			// Lee la respuesta del servidor
 			String respuesta = input.readLine();
+			
 			// Muestra la respuesta al cliente
 			JOptionPane.showMessageDialog(null, respuesta);
+			
 			// Se cierra la conexion
 			output.close();
 			input.close();
