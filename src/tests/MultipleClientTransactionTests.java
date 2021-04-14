@@ -1,3 +1,4 @@
+package tests;
 import java.awt.GridLayout;
 
 import java.io.BufferedReader;
@@ -24,13 +25,13 @@ import javax.swing.JTextField;
 import utils.DiffieHellman;
 import utils.TransactionMessage;
 
-public class testMan {
+public class MultipleClientTransactionTests {
 	public static void main(String[] args) {
-//		IntegrityVerifierClient(6666, "123543", "321098", 123321.00);
-//		IntegrityVerifierClient(6666, "123345", "321765", 123123.00);
-//		IntegrityVerifierClient(6666, "123977", "321345", 123666.00);
-//		IntegrityVerifierClient(3343, "123123", "321321", 1231.00);
-//		IntegrityVerifierClient(3343, "123321", "321123", 12323.00);
+		IntegrityVerifierClient(6666, "123543", "321098", 123321.00);
+		IntegrityVerifierClient(6666, "123345", "321765", 123123.00);
+		IntegrityVerifierClient(6666, "123977", "321345", 123666.00);
+		IntegrityVerifierClient(3343, "123123", "321321", 1231.00);
+		IntegrityVerifierClient(3343, "123321", "321123", 12323.00);
 		IntegrityVerifierClient(3343, "123666", "321666", 12333.00);
 	}
 	
@@ -58,13 +59,11 @@ public class testMan {
 			System.out.println("transaccion enviada");
 			
 			// Importante para que el mensaje se envíe
+			output.println("exit");
 			output.flush();
 
 			// Lee la respuesta del servidor
 			String respuesta = input.readLine();
-
-			// Muestra la respuesta al cliente
-			JOptionPane.showMessageDialog(null, respuesta);
 
 			// Se cierra la conexion
 			output.close();
@@ -73,10 +72,6 @@ public class testMan {
 		} // end try
 		catch (IOException ioException) {
 			ioException.printStackTrace();
-		}
-		// Salida de la aplicacion
-		finally {
-			System.exit(0);
 		}
 	}
 	private static TransactionMessage transactionMessageInput(Integer privateSharedKey, String hmac, String sourceAccount, String destinationAccount, Double amount) {

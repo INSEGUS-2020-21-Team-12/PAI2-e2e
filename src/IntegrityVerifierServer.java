@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -12,6 +13,7 @@ import javax.net.ServerSocketFactory;
 
 import utils.CryptoTools;
 import utils.DiffieHellman;
+import utils.GenerateLog;
 import utils.TransactionMessage;
 
 public class IntegrityVerifierServer {
@@ -30,6 +32,9 @@ public class IntegrityVerifierServer {
 
 	// Ejecución del servidor para escuchar peticiones de los clientes
 	private void runServer() {
+		Double numTransactions=0.;
+		Double numIntegros=0.;
+		File file = GenerateLog.createFichero();
 		while (true) {
 			// Espera las peticiones del cliente para comprobar mensaje/MAC
 			try {
@@ -53,6 +58,8 @@ public class IntegrityVerifierServer {
 				Boolean aliveSession = true;
 				
 				while (aliveSession) {
+					numTransactions++;
+					
 					TransactionMessage transaction = TransactionMessage.receive(inputFromClient);
 					System.out.println("--- ["+transaction.getNonce()+"] transaccion recibida");
 					
@@ -70,6 +77,7 @@ public class IntegrityVerifierServer {
 						transactionResult =  "--- ["+transaction.getNonce()+"] mensaje corrupto, transaccion rechazada";
 						transactionResultMessage = "["+transaction.toString()+"] (rechazada)";
 					} else {
+						numIntegros++;
 						transactionResult =  "--- ["+transaction.getNonce()+"] mensaje integro, transaccion aceptada";
 						transactionResultMessage = "["+transaction.toString()+"] (aceptada)";
 						nonceDatabase.add(transaction.getNonce());					
@@ -94,6 +102,9 @@ public class IntegrityVerifierServer {
 				ioException.printStackTrace();
 			}
 			System.out.println("...\n");
+			Double kpi=(numIntegros/numTransactions)*100;
+			System.out.println("KPI: "+kpi+"%");
+			GenerateLog.writeFileTxt(kpi, file, Integer.valueOf((int) (numTransactions-numIntegros)));
 		}
 	}
 

@@ -137,7 +137,7 @@ public class ManInTheMiddle {
 				}
 
 				
-				System.out.println("--- sesión de víctuma finalizada");
+				System.out.println("--- Sesión de víctima finalizada");
 
 				outputToServer.close();
 				inputFromServer.close();
