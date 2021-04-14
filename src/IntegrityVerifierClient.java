@@ -13,9 +13,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import utils.DiffieHellman;
 import utils.TransactionMessage;
 
 public class IntegrityVerifierClient {
+	
 	// Constructor que abre una conexión Socket para enviar mensaje/MAC al servidor
 	public IntegrityVerifierClient() {
 		try {
@@ -25,6 +27,13 @@ public class IntegrityVerifierClient {
 			// Crea un PrintWriter para enviar mensaje/MAC al servidor
 			PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			//String userName = JOptionPane.showInputDialog(null, "Introduzca su mensaje:");
+			
+			// Crea un objeto BufferedReader para leer la respuesta del servidor
+			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			// INTERCAMBIO DE CLAVES
+			Integer privateSharedKey = DiffieHellman.keyExchange(input, output);
+			System.out.println(privateSharedKey);
 			
 			TransactionMessage transaction = transactionMessageInput();
 
@@ -42,8 +51,6 @@ public class IntegrityVerifierClient {
 			// Importante para que el mensaje se envíe
 			output.flush();
 
-			// Crea un objeto BufferedReader para leer la respuesta del servidor
-			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			// Lee la respuesta del servidor
 			String respuesta = input.readLine();
 

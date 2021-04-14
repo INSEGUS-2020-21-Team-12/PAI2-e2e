@@ -10,6 +10,7 @@ import java.net.Socket;
 
 import javax.net.ServerSocketFactory;
 
+import utils.DiffieHellman;
 import utils.TransactionMessage;
 
 public class IntegrityVerifierServer {
@@ -39,6 +40,10 @@ public class IntegrityVerifierServer {
 				// Abre un PrintWriter para enviar datos al cliente
 				PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 				// Se lee del cliente el mensaje y el macdelMensajeEnviado
+				
+				// INTERCAMBIO DE CLAVES
+				Integer privateSharedKey = DiffieHellman.keyExchange(input, output);
+				System.out.println(privateSharedKey);
 				
 				//String mensaje = input.readLine();
 				// A continuación habría que calcular el mac del MensajeEnviado que podría ser
