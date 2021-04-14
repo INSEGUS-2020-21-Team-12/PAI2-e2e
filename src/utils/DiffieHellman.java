@@ -9,7 +9,7 @@ public class DiffieHellman {
 	/* 
 	 Definiendo p y g para el intercambio de claves Diffie-Hellman.
 	 Los valores han sido elegidos teniendo en cuenta implementar una buena seguridad y una buena eficiencia.
-	 Para que el algoritmo fuera totalmente seguro, p debería ser un número de 20 digítos, pero un número tan grande sería intratable para el programa
+	 Para que el algoritmo fuera totalmente seguro, p deberï¿½a ser un nï¿½mero de 20 digï¿½tos, pero un nï¿½mero tan grande serï¿½a intratable para el programa
 	 */
 	public static Integer p = 10000019;
 	public static Integer g = 111;
@@ -38,6 +38,22 @@ public class DiffieHellman {
 		Integer newgreceived = Integer.parseInt(input.readLine());
 		Integer privateSharedKey = privateKey(newgreceived,privateKeyServerOrClient);
 		return privateSharedKey;
+	}
+	
+	public static void keyExchangePasstrough(BufferedReader input1, BufferedReader input2, PrintWriter output1, PrintWriter output2) {
+		
+		try {
+			Integer g1 = Integer.parseInt(input1.readLine());
+			Integer g2 = Integer.parseInt(input2.readLine());
+			
+			output1.println(g2);
+			output2.println(g1);
+			
+			output1.flush();
+			output2.flush();
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
