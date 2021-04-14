@@ -34,15 +34,14 @@ public class IntegrityVerifierClient {
 			
 			// INTERCAMBIO DE CLAVES
 			Integer privateSharedKey = DiffieHellman.keyExchange(input, output);
-			System.out.println(privateSharedKey);
 			
 			TransactionMessage transaction = transactionMessageInput(privateSharedKey, "HmacSHA256");
-			
 
 			// Envío del mensaje al servidor
 			TransactionMessage.send(transaction, output);
-			System.out.println("transaccion enviada");
-			
+			System.out.println("Transaccion enviada: " + "["+transaction.toString()+"]");
+			output.println("exit");
+			System.out.println("Sesión finalizada");
 			// Importante para que el mensaje se envíe
 			output.flush();
 
@@ -86,13 +85,9 @@ public class IntegrityVerifierClient {
 		transactionPanel.add(new JLabel("Cantidad:"));
 		transactionPanel.add(amountField);
 
-		int result = JOptionPane.showConfirmDialog(null, transactionPanel, "Complete el mensaje de transacción",
+		int result = JOptionPane.showConfirmDialog(null, transactionPanel, "Datos de transacción",
 				JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION) {
-			System.out.println("Cuenta origen: " + srcAccountField.getText());
-			System.out.println("Cuenta destino: " + dstAccountField.getText());
-			System.out.println("Cantidad: " + amountField.getText());
-			
 			res = new TransactionMessage(srcAccountField.getText(), dstAccountField.getText(), 
 					Double.valueOf(amountField.getText()), 
 					privateSharedKey, hmac);

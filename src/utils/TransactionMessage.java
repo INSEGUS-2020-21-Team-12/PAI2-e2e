@@ -43,6 +43,7 @@ public class TransactionMessage {
 		output.println(transaction.getAmount());
 		output.println(transaction.getNonce());
 		output.println(transaction.getMac());
+		output.flush();
 	}
 	
 	public static TransactionMessage receive(BufferedReader input) throws IOException {
