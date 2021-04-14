@@ -10,6 +10,8 @@ import java.net.Socket;
 
 import javax.net.ServerSocketFactory;
 
+import utils.TransactionMessage;
+
 public class IntegrityVerifierServer {
 
 	private ServerSocket serverSocket;
@@ -38,9 +40,11 @@ public class IntegrityVerifierServer {
 				PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 				// Se lee del cliente el mensaje y el macdelMensajeEnviado
 				
-				String mensaje = input.readLine();
+				//String mensaje = input.readLine();
 				// A continuación habría que calcular el mac del MensajeEnviado que podría ser
 				//String macdelMensajeEnviado = input.readLine();
+				TransactionMessage transaction = TransactionMessage.receive(input);
+				System.out.println("  Transaccion recibida");
 				// mac del MensajeCalculado
 
 				// TODO: Calcular macdelMensajeCalculado
@@ -51,7 +55,7 @@ public class IntegrityVerifierServer {
 //				} else {
 //					output.println("Mensaje enviado no integro.");
 //				}
-				output.println("El mensaje recibido es: " + mensaje);
+				output.println("Operación completeada: " + transaction);
 				output.flush();
 				
 				output.close();

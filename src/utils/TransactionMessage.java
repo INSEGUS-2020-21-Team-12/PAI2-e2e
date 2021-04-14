@@ -1,5 +1,10 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.function.DoubleToLongFunction;
+
 public class TransactionMessage {
 	
 	private String sourceAccount;
@@ -17,6 +22,24 @@ public class TransactionMessage {
 		this.amount = amount;
 		this.nonce = nonce;
 		this.mac = mac;
+	}
+	
+	public static void send(TransactionMessage transaction, PrintWriter output) {
+		output.println(transaction.getSourceAccount());
+		output.println(transaction.getDestinationAccount());
+		output.println(transaction.getAmount());
+		output.println(transaction.getNonce());
+		output.println(transaction.getMac());
+	}
+	
+	public static TransactionMessage receive(BufferedReader input) throws IOException {
+		String sourceAccount = input.readLine();
+		String destinationAccount = input.readLine();
+		Double amount = Double.parseDouble(input.readLine());
+		String nonce = input.readLine();
+		String mac = input.readLine();
+		
+		return new TransactionMessage(sourceAccount, destinationAccount, amount, nonce, mac);
 	}
 
 	public String getSourceAccount() {
@@ -38,5 +61,15 @@ public class TransactionMessage {
 	public String getMac() {
 		return mac;
 	}
+
+	@Override
+	public String toString() {
+		return "TransactionMessage [sourceAccount=" + sourceAccount + ", destinationAccount=" + destinationAccount
+				+ ", amount=" + amount + ", nonce=" + nonce + ", mac=" + mac + "]";
+	}
+	
+	
+	
+	
 
 }

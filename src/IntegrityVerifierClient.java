@@ -8,8 +8,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.net.SocketFactory;
-import javax.swing.Box;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,15 +24,18 @@ public class IntegrityVerifierClient {
 
 			// Crea un PrintWriter para enviar mensaje/MAC al servidor
 			PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-			String userName = JOptionPane.showInputDialog(null, "Introduzca su mensaje:");
+			//String userName = JOptionPane.showInputDialog(null, "Introduzca su mensaje:");
 			
-			transactionMessageInput();
+			TransactionMessage transaction = transactionMessageInput();
 
 			// TODO: Recoger input del usuario y MAC de la transaccion
-			String mensaje = userName, macdelMensaje = null;
+			//String mensaje = userName, macdelMensaje = null;
 
 			// Envío del mensaje al servidor
-			output.println(mensaje);
+			//output.println(mensaje);
+			TransactionMessage.send(transaction, output);
+			System.out.println("transaccion enviada");
+			
 			// Habría que calcular el correspondiente MAC con la clave compartida por
 			// servidor/cliente
 			// output.println(macdelMensaje);
