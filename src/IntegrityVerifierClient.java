@@ -23,7 +23,7 @@ public class IntegrityVerifierClient {
 	public IntegrityVerifierClient() {
 		try {
 			SocketFactory socketFactory = (SocketFactory) SocketFactory.getDefault();
-			Socket socket = (Socket) socketFactory.createSocket("localhost", 3343);
+			Socket socket = (Socket) socketFactory.createSocket("localhost", 6666);
 
 			// Crea un PrintWriter para enviar mensaje/MAC al servidor
 			PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -37,6 +37,7 @@ public class IntegrityVerifierClient {
 			System.out.println(privateSharedKey);
 			
 			TransactionMessage transaction = transactionMessageInput(privateSharedKey, "HmacSHA256");
+			
 
 			// Envío del mensaje al servidor
 			TransactionMessage.send(transaction, output);
