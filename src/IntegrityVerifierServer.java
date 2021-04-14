@@ -10,6 +10,8 @@ import java.net.Socket;
 
 import javax.net.ServerSocketFactory;
 
+import utils.CryptoTools;
+import utils.DiffieHellman;
 import utils.TransactionMessage;
 
 public class IntegrityVerifierServer {
@@ -40,6 +42,10 @@ public class IntegrityVerifierServer {
 				PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 				// Se lee del cliente el mensaje y el macdelMensajeEnviado
 				
+				// INTERCAMBIO DE CLAVES
+				Integer privateSharedKey = DiffieHellman.keyExchange(input, output);
+				System.out.println(privateSharedKey);
+				
 				//String mensaje = input.readLine();
 				// A continuación habría que calcular el mac del MensajeEnviado que podría ser
 				//String macdelMensajeEnviado = input.readLine();
@@ -48,14 +54,13 @@ public class IntegrityVerifierServer {
 				// mac del MensajeCalculado
 
 				// TODO: Calcular macdelMensajeCalculado
-				String macdelMensajeCalculado = null;
+				String macdelMensajeCalculado = CryptoTools.calculateHMAC(transaction.toString(), privateSharedKey, "HmacSHA256");
 				// ......................................
-//				if (macdelMensajeEnviado.equals(macdelMensajeCalculado)) {
-//					output.println("Mensaje enviado integro ");
-//				} else {
-//					output.println("Mensaje enviado no integro.");
-//				}
-				output.println("Operación completeada: " + transaction);
+				if (transaction.getMac().equals(macdelMensajeCalculado)) {
+					output.println("Mensaje enviado integro ");
+				} else {
+					output.println("Mensaje enviado no integro.");
+				}
 				output.flush();
 				
 				output.close();

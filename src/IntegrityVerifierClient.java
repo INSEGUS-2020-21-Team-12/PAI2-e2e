@@ -13,9 +13,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import utils.CryptoTools;
+import utils.DiffieHellman;
 import utils.TransactionMessage;
 
 public class IntegrityVerifierClient {
+	
 	// Constructor que abre una conexión Socket para enviar mensaje/MAC al servidor
 	public IntegrityVerifierClient() {
 		try {
@@ -26,24 +29,22 @@ public class IntegrityVerifierClient {
 			PrintWriter output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 			//String userName = JOptionPane.showInputDialog(null, "Introduzca su mensaje:");
 			
-			TransactionMessage transaction = transactionMessageInput();
-
-			// TODO: Recoger input del usuario y MAC de la transaccion
-			//String mensaje = userName, macdelMensaje = null;
+			// Crea un objeto BufferedReader para leer la respuesta del servidor
+			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			// INTERCAMBIO DE CLAVES
+			Integer privateSharedKey = DiffieHellman.keyExchange(input, output);
+			System.out.println(privateSharedKey);
+			
+			TransactionMessage transaction = transactionMessageInput(privateSharedKey, "HmacSHA256");
 
 			// Envío del mensaje al servidor
-			//output.println(mensaje);
 			TransactionMessage.send(transaction, output);
 			System.out.println("transaccion enviada");
 			
-			// Habría que calcular el correspondiente MAC con la clave compartida por
-			// servidor/cliente
-			// output.println(macdelMensaje);
 			// Importante para que el mensaje se envíe
 			output.flush();
 
-			// Crea un objeto BufferedReader para leer la respuesta del servidor
-			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			// Lee la respuesta del servidor
 			String respuesta = input.readLine();
 
@@ -64,7 +65,7 @@ public class IntegrityVerifierClient {
 		}
 	}
 
-	private TransactionMessage transactionMessageInput() {
+	private TransactionMessage transactionMessageInput(Integer privateSharedKey, String hmac) {
 		//JFrame frame = new JFrame("Nueva transacción");
 		TransactionMessage res = null;
 		
@@ -93,7 +94,7 @@ public class IntegrityVerifierClient {
 			
 			res = new TransactionMessage(srcAccountField.getText(), dstAccountField.getText(), 
 					Double.valueOf(amountField.getText()), 
-					"nonce", "mac");
+					privateSharedKey, hmac);
 		}
 		
 		return res;
