@@ -3,6 +3,9 @@ package utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.function.DoubleToLongFunction;
 
 public class TransactionMessage {
@@ -22,6 +25,16 @@ public class TransactionMessage {
 		this.amount = amount;
 		this.nonce = nonce;
 		this.mac = mac;
+	}
+
+	public TransactionMessage(String sourceAccount, String destinationAccount, Double amount,
+			Integer sharedPrivateKey, String algorithmName) {
+		super();
+		this.sourceAccount = sourceAccount;
+		this.destinationAccount = destinationAccount;
+		this.amount = amount;
+		this.nonce = CryptoTools.generateNonce();
+		this.mac = CryptoTools.calculateHMAC(this.toString(),sharedPrivateKey, algorithmName);
 	}
 	
 	public static void send(TransactionMessage transaction, PrintWriter output) {
@@ -61,11 +74,18 @@ public class TransactionMessage {
 	public String getMac() {
 		return mac;
 	}
+	
+	public void setNonce(String nonce) {
+		this.nonce = nonce;
+	}
+
+	public void setMac(String mac) {
+		this.mac = mac;
+	}
 
 	@Override
 	public String toString() {
-		return "TransactionMessage [sourceAccount=" + sourceAccount + ", destinationAccount=" + destinationAccount
-				+ ", amount=" + amount + ", nonce=" + nonce + ", mac=" + mac + "]";
+		return  sourceAccount + ", " + destinationAccount + ", " + amount + ", " + nonce;
 	}
 	
 	

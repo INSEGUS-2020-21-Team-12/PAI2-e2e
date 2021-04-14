@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import utils.CryptoTools;
 import utils.DiffieHellman;
 import utils.TransactionMessage;
 
@@ -35,19 +36,12 @@ public class IntegrityVerifierClient {
 			Integer privateSharedKey = DiffieHellman.keyExchange(input, output);
 			System.out.println(privateSharedKey);
 			
-			TransactionMessage transaction = transactionMessageInput();
-
-			// TODO: Recoger input del usuario y MAC de la transaccion
-			//String mensaje = userName, macdelMensaje = null;
+			TransactionMessage transaction = transactionMessageInput(privateSharedKey, "HmacSHA256");
 
 			// Envío del mensaje al servidor
-			//output.println(mensaje);
 			TransactionMessage.send(transaction, output);
 			System.out.println("transaccion enviada");
 			
-			// Habría que calcular el correspondiente MAC con la clave compartida por
-			// servidor/cliente
-			// output.println(macdelMensaje);
 			// Importante para que el mensaje se envíe
 			output.flush();
 
@@ -71,7 +65,7 @@ public class IntegrityVerifierClient {
 		}
 	}
 
-	private TransactionMessage transactionMessageInput() {
+	private TransactionMessage transactionMessageInput(Integer privateSharedKey, String hmac) {
 		//JFrame frame = new JFrame("Nueva transacción");
 		TransactionMessage res = null;
 		
@@ -100,7 +94,7 @@ public class IntegrityVerifierClient {
 			
 			res = new TransactionMessage(srcAccountField.getText(), dstAccountField.getText(), 
 					Double.valueOf(amountField.getText()), 
-					"nonce", "mac");
+					privateSharedKey, hmac);
 		}
 		
 		return res;
